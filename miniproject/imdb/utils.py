@@ -304,6 +304,7 @@ def populate_director():
 
 def populate_movie():
     from .models import Movie,Actor,Director,Cast
+    import random
     movies_list = open('/home/rgukt/Desktop/100_movies/movies_100.json','r')
     movies = movies_list.read()
     import json
@@ -317,7 +318,7 @@ def populate_movie():
         budget_in_crores='0'+movie["budget"],
         runtime_Minutes='0'+movie["duration"],
         imdb_link = movie["imdb_link"],
-        genre=movie["genres"][0],
+        genre=random.choice(movie["genres"]),
         average_rating = movie["average_rating"],
         movie_year = '0'+movie["year_of_release"])
         print(movie_object)

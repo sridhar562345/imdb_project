@@ -32,14 +32,12 @@ def analytics(request):
     two_bar_data = get_two_bar_plot_data()
     polar_chart = get_polar_chart_data()
     multi_line_plot = get_multi_line_plot_data()
-    sri = sri_get_one_bar_plot_data()
     data = {}
     data.update(bar_data)
     data.update(pie_data)
     data.update(two_bar_data)
     data.update(polar_chart)
     data.update(multi_line_plot)
-    data.update(sri)
     return render(request,'analytics.html',context=data)
 
 
@@ -67,31 +65,6 @@ def get_one_bar_plot_data():
         'single_bar_chart_data_one': json.dumps(single_bar_chart_data),
         'single_bar_chart_data_one_title': 'Average B.O collections per year'
     }
-
-def sri_get_one_bar_plot_data():
-    import json
-    from .models import Movie
-    query1 = """select Avg(box_office_collection_in_crores) from imdb_movie group by movie_year having movie_year between 2010 and 2015 order by movie_year asc;"""
-    query2 = """select distinct movie_year from imdb_movie where movie_year between 2010 and 2015 order by movie_year asc;"""
-    averages = execute_sql_query(query1)
-    years = execute_sql_query(query2)
-    single_bar_chart_data = {
-        "labels": list(years),
-        "datasets":[
-            {
-                "data": list(averages),
-                "name": "Single Bar Chart",
-                "borderColor": "rgba(0, 123, 255, 0.9)",
-                "border_width": "0",
-                "backgroundColor": "rgba(0, 123, 255, 0.5)"
-            }
-        ]
-    }
-    return {
-        'sri_single_bar_chart_data_one': json.dumps(single_bar_chart_data),
-        'sri_single_bar_chart_data_one_title': 'Average B.O collections per year'
-    }
-
 
 def get_pie_chart_data():
     import json
