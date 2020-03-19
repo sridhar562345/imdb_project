@@ -8,7 +8,7 @@ def index(request):
     return render(request,'imdb_home.html',context)
 
 def movie(request,movie_id):
-    movie_obj = Movie.objects.get(movie_id = movie_id)
+    movie_obj = Movie.objects.get(id = movie_id)
     cast_list = Cast.objects.filter(movie = movie_obj)
     context = {'movie':movie_obj,'cast_objs':cast_list}
     return render(request,'imdb_movie.html',context)
@@ -20,7 +20,7 @@ def director(request,director_id):
     return render(request,'imdb_director.html',context)
 
 def actor(request,actor_id):
-    actor_obj = Actor.objects.get(actor_id = actor_id)
+    actor_obj = Actor.objects.get(id = actor_id)
     movies_list = actor_obj.movie_set.all()
     context = {'actor':actor_obj,'movies':movies_list}
     return render(request,'imdb_actor.html',context)
@@ -32,12 +32,14 @@ def analytics(request):
     two_bar_data = get_two_bar_plot_data()
     polar_chart = get_polar_chart_data()
     multi_line_plot = get_multi_line_plot_data()
+    sri = sri_get_one_bar_plot_data()
     data = {}
     data.update(bar_data)
     data.update(pie_data)
     data.update(two_bar_data)
     data.update(polar_chart)
     data.update(multi_line_plot)
+    data.update(sri)
     return render(request,'analytics.html',context=data)
 
 
@@ -64,6 +66,30 @@ def get_one_bar_plot_data():
     return {
         'single_bar_chart_data_one': json.dumps(single_bar_chart_data),
         'single_bar_chart_data_one_title': 'Average B.O collections per year'
+    }
+
+def sri_get_one_bar_plot_data():
+    import json
+    from .models import Movie
+    query1 = """select Avg(box_office_collection_in_crores) from imdb_movie group by movie_year having movie_year between 2010 and 2015 order by movie_year asc;"""
+    query2 = """select distinct movie_year from imdb_movie where movie_year between 2010 and 2015 order by movie_year asc;"""
+    averages = execute_sql_query(query1)
+    years = execute_sql_query(query2)
+    single_bar_chart_data = {
+        "labels": list(years),
+        "datasets":[
+            {
+                "data": list(averages),
+                "name": "Single Bar Chart",
+                "borderColor": "rgba(0, 123, 255, 0.9)",
+                "border_width": "0",
+                "backgroundColor": "rgba(0, 123, 255, 0.5)"
+            }
+        ]
+    }
+    return {
+        'sri_single_bar_chart_data_one': json.dumps(single_bar_chart_data),
+        'sri_single_bar_chart_data_one_title': 'Average B.O collections per year'
     }
 
 
@@ -141,18 +167,18 @@ def get_polar_chart_data():
 
 def get_two_bar_plot_data():
     import json
-    query_1 = """select count(Distinct actor.actor_id) from imdb_cast as cast,imdb_actor as actor,imdb_movie as movie
-                where `actor`.actor_id=`cast`.actor_id and `movie`.movie_id=`cast`.movie_id and `actor`.gender='M'
-                group by `movie`.movie_year having `movie`.movie_year between 2010 and 2015 order by movie.movie_year asc;"""
+    query_1 = """select count(Distinct actor.id) from imdb_cast as cast,imdb_actor as actor,imdb_movie as movie
+                where `actor`.id=`cast`.actor_id and `movie`.id=`cast`.movie_id and `actor`.gender='male'
+                group by `movie`.movie_year having `movie`.movie_year between 2013 and 2018 order by movie.movie_year asc;"""
 
     query2 = """
-                select count(Distinct actor.actor_id) from imdb_cast as cast,imdb_actor as actor,imdb_movie as movie
-                where `actor`.actor_id=`cast`.actor_id and `movie`.movie_id=`cast`.movie_id and `actor`.gender='F'
-                group by `movie`.movie_year having `movie`.movie_year between 2010 and 2015 order by movie.movie_year asc;
+                select count(Distinct actor.id) from imdb_cast as cast,imdb_actor as actor,imdb_movie as movie
+                where `actor`.id=`cast`.actor_id and `movie`.id=`cast`.movie_id and `actor`.gender='female'
+                group by `movie`.movie_year having `movie`.movie_year between 2013 and 2028 order by movie.movie_year asc;
                 """
 
     query_3 = """
-                select distinct movie_year from imdb_movie where movie_year between 2010 and 2015 order by movie_year asc;
+                select distinct movie_year from imdb_movie  WHERE movie_year between 2013 and 2018 order by movie_year asc;
                 """
     males = execute_sql_query(query_1)
     females = execute_sql_query(query2)
@@ -189,14 +215,14 @@ def get_two_bar_plot_data():
 def get_multi_line_plot_data():
     import json
     query_1 = '''select box_office_collection_in_crores,budget_in_crores,name from imdb_movie group by name
-                order by rank desc limit 5;'''
+                order by average_rating desc limit 5;'''
     data = execute_sql_query(query_1)
     collections = []
     budget = []
     movie_name = []
     for i in data:
         collections.append(i[0])
-        budget.append(i[1])
+        budget.append((i[1]/10000000))
         movie_name.append(i[2])
     multi_line_plot_data = {
         "labels": movie_name,

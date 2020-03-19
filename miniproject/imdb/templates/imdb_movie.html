@@ -28,17 +28,19 @@ The film was conceived by Rajamouli's father K. V. Vijayendra Prasad, who random
                 <tr>
                     <th>Actor id</th>
                     <th>Name</th>
-                    <th>Role</th>
+                    <th>Gender</th>
+                    <th>Fb Followers</th>
                 </tr>
                 </thead>
                 <tbody>
                 {%for cast in cast_objs%}
                 <tr class="tr-shadow">
-                    <td>{{cast.actor.actor_id}}</td>
+                    <td>{{cast.actor.id}}</td>
                     <td >
-                        <a href="/imdb/actor/{{cast.actor.actor_id}}/">{{cast.actor.name}}</a>
+                        <a href="/imdb/actor/{{cast.actor.id}}/">{{cast.actor.name}}</a>
                     </td>
-                    <td>{{cast.role}}</td>
+                    <td>{{cast.actor.gender}}</td>
+                    <td>{{cast.actor.fb_likes}}</td>
                 </tr>
                 <tr class="spacer"></tr>
                 {%endfor%}

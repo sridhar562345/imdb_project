@@ -14,7 +14,7 @@
                     <th>Movie id</th>
                     <th>Name</th>
                     <th>Director</th>
-                    <th>Release Date</th>
+                    <th>Year of Release</th>
                     <th>Average Rating</th>
                     <th>Collections(in Crores.)</th>
                     <th></th>
@@ -23,14 +23,14 @@
                 <tbody>
                 {%for movie in movie_list%}
                 <tr class="tr-shadow">
-                    <td>{{movie.movie_id}}</td>
+                    <td>{{movie.id}}</td>
                     <td class="desc">
-                        <a href="/imdb/movie/{{movie.movie_id}}/">{{movie.name}}</a>
+                        <a href="/imdb/movie/{{movie.id}}/">{{movie.name}}</a>
                     </td>
                     <td class="desc">
                         <a href="/imdb/director/{{movie.director.id}}/">{{movie.director}}</a>
                     </td>
-                    <td>{{movie.release_date}}</td>
+                    <td>{{movie.movie_year}}</td>
                     <td>
                         <span class="status--high">{{movie.average_rating}}</span>
                     </td>

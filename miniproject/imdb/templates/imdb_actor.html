@@ -29,17 +29,17 @@ His works include Varsham (2004), Chatrapathi (2005), Chakram (2005), Billa (200
                     <th>Release Date</th>
                     <th>Average Rating</th>
                     <th>Collections(in Crores.)</th>
-                    <th></th>
+                    
                 </tr>
                 </thead>
                 <tbody>
                 {%for movie in movies%}
                 <tr class="tr-shadow">
-                    <td>{{movie.movie_id}}</td>
+                    <td>{{movie.id}}</td>
                     <td class="desc">
-                        <a href="/imdb/movie/{{movie.movie_id}}/">{{movie.name}}</a>
+                        <a href="/imdb/movie/{{movie.id}}/">{{movie.name}}</a>
                     </td>
-                    <td>{{movie.release_date}}</td>
+                    <td>{{movie.movie_year}}</td>
                     <td>
                         <span class="status--high">{{movie.average_rating}}</span>
                     </td>

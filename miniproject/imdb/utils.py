@@ -283,7 +283,7 @@ def execute_sql_query(sql_query):
 
 def populate_actor():
     from .models import Actor
-    actors_list = open('/home/rgukt/Desktop/complete_data/actors_5000.json','r')
+    actors_list = open('/home/rgukt/Desktop/100_movies/actors_100.json','r')
     actors = actors_list.read()
     import json
     actors_dictionary = json.loads(actors)
@@ -293,7 +293,7 @@ def populate_actor():
 
 def populate_director():
     from .models import Director
-    directors_list = open('/home/rgukt/Desktop/complete_data/directors_5000.json','r')
+    directors_list = open('/home/rgukt/Desktop/100_movies/directors_100.json','r')
     directors = directors_list.read()
     import json
     directors_dictionary = json.loads(directors)
@@ -304,26 +304,26 @@ def populate_director():
 
 def populate_movie():
     from .models import Movie,Actor,Director,Cast
-    movies_list = open('/home/rgukt/Desktop/complete_data/movies_5000.json','r')
+    movies_list = open('/home/rgukt/Desktop/100_movies/movies_100.json','r')
     movies = movies_list.read()
     import json
     movies_dictionary = json.loads(movies)
     for movie in movies_dictionary:
         movie_object = Movie.objects.create(name=movie["name"],
         movie_id = movie["movie_id"],
-        release_date = movie["release_date"],
+        
         box_office_collection_in_crores = movie["box_office_collection_in_crores"],
         director= Director.objects.get(name=movie["director_name"]),
-        budget_in_crores=movie["budget"],
-        runtime_Minutes=movie["duration"],
+        budget_in_crores='0'+movie["budget"],
+        runtime_Minutes='0'+movie["duration"],
         imdb_link = movie["imdb_link"],
         genre=movie["genres"][0],
-        average_rating = movie["average_rating"]
-        movie_year = movie["movie_year"])
-        
+        average_rating = movie["average_rating"],
+        movie_year = '0'+movie["year_of_release"])
+        print(movie_object)
         cast_list = movie["actors"]
         for cast in cast_list:
             Cast.objects.create(actor = Actor.objects.get(actor_id=cast["actor_id"]),
             movie=movie_object,
             role = cast["role"],
-            is_debut_movie = cast["is_debut_movie"],remuneration_in_crores=cast["remuneration_in_crores"])
+            is_debut_movie = cast["is_debut_movie"])
