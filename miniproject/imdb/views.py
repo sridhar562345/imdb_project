@@ -55,9 +55,9 @@ def get_one_bar_plot_data():
             {
                 "data": list(averages),
                 "name": "Single Bar Chart",
-                "borderColor": "rgba(0, 123, 255, 0.9)",
+                "borderColor": "rgba(51, 255, 0,0.9)",
                 "border_width": "0",
-                "backgroundColor": "rgba(0, 123, 255, 0.5)"
+                "backgroundColor": "rgba(0, 4, 255, 0.5)"
             }
         ]
     }
